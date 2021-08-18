@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <script src="scripts/tmi.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        console.log("running")
+        console.log("setting up auth")
+
+        axios.get({
+            url: `hi`,
+            // responseType: "stream",
+        });
+
+        const client = new tmi.Client({
+            options: {
+                debug: true,
+                messagesLogLevel: "info"
+            },
+            connection: {
+                reconnect: true,
+                secure: true
+            },
+            identity: {
+                username: 'druidry_bot',
+                password: 'oauth:2qldssxvwm0vi1mvsvnt533djmyjyq'
+            },
+            channels: ['Ax2s']
+        });
+        client.connect().catch(console.error);
+        client.on('message', (channel, tags, message, self) => {
+            console.log(message);
+            axios.get({
+                url: `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${text.split(" ").join("%20")}`,
+                // responseType: "stream",
+            }).then((response) => {
+                console.log(response.data);
+                // response.data.pipe(fs.createWriteStream(__dirname + "../test.mp3"));
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <audio id="my-audio" controls>
+        <source src="../test.mp3" type="audio/mpeg" />
+    </audio>
+</body>
+
+</html>
